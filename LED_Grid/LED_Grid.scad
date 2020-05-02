@@ -9,10 +9,10 @@
 /* [Global] */
 
 // Number of LEDs in X direction.
-num_x = 8; // [2:1:32]
+num_x = 5; // [2:1:32]
 
 // Number of LEDs in Y direction.
-num_y = 8; // [2:1:32]
+num_y = 5; // [2:1:32]
 
 // Number of LEDs per meter.
 leds_pm = 30; // [30, 60, 74, 96, 100, 144]
@@ -34,23 +34,23 @@ wall_h = 20; // [7.5, 10, 15, 30]
 //wall_h = (cell_size / 2) / tan(30);
 
 // Clearance between interlocking grid modules in millimeters.
-cut_clr = 0.25; // [0:0.125:0.5]
+cut_clr = 0.5; // [0:0.125:0.5]
 
 // Add border at the top side of the module.
 b_top = 1; // [0, 1]
 
 // Add border at the right side of the module.
-b_right = 1; // [0, 1]
+b_right = 0; // [0, 1]
 
 // Add border at the bottom side of the module.
 b_bottom = 1; // [0, 1]
 
 // Add border at the left side of the module.
-b_left = 1; // [0, 1]
+b_left = 0; // [0, 1]
 
 // Brim parameters           
 brim_w = 10;
-brim_h = 2;
+brim_h = 20;
 
 // Drill screw nut holes parameters
 b_drill = 1;
