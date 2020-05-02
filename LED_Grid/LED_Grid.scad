@@ -275,7 +275,7 @@ module cuts(borders = [0, 0, 0, 0])
 	 * border's end will be tapered. Otherwise the borders will prevent
 	 * modules from sliding into each other.
          */
-        for(x=[-1:2:num_x - 1]){
+        for(x=[-1:2:num_x]){
             translate([x * cell_size + (cell_size +wall_t) / 2,
                        num_y * cell_size + wall_t / 2,
                        wall_h / 2])
@@ -285,7 +285,7 @@ module cuts(borders = [0, 0, 0, 0])
 
     /* Right border */
     if(!borders[1]){
-        for(y=[-1:2:num_y - 1]){
+        for(y=[-1:2:num_y]){
             translate([num_x * cell_size + wall_t / 2,
                        y * cell_size + (cell_size + wall_t) / 2,
                        wall_h / 2])
