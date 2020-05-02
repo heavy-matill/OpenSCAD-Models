@@ -15,7 +15,7 @@ num_x = 8; // [2:1:32]
 num_y = 8; // [2:1:32]
 
 // Number of LEDs per meter.
-leds_pm = 100; // [30, 60, 74, 96, 100, 144]
+leds_pm = 30; // [30, 60, 74, 96, 100, 144]
 
 /*
  * Spacing of LEDs on strip in millimeters. Either calculate from LEDs/m
@@ -24,7 +24,7 @@ leds_pm = 100; // [30, 60, 74, 96, 100, 144]
 cell_size = round(100000 / leds_pm) / 100;
 
 // Wall height in millimeters.
-wall_h = 10; // [7.5, 10, 15, 30]
+wall_h = 20; // [7.5, 10, 15, 30]
 
 /*
  * Minimal wall height can be calculated from LED spacing and beam angle.
@@ -47,6 +47,10 @@ b_bottom = 1; // [0, 1]
 
 // Add border at the left side of the module.
 b_left = 1; // [0, 1]
+
+// Brim parameters           
+brim_w = 10;
+brim_h = 2;
 
 /* [Hidden] */
 /* Wall thickness in millimeters. */
@@ -393,6 +397,55 @@ module tabs(borders = [0, 0, 0, 0])
     }
 }
 
+module brims(borders = [0,0,0,0]) {  
+    
+    /* Top */
+    if(borders[0]){
+        // offset corner left        
+        brim_offs = borders[3] ? wall_t + brim_w : - cut_clr / 2 + wall_t ;
+        // add corner right
+        brim_add = borders[1] ? 0 : - cut_clr / 2 - wall_t;
+        translate([wall_t - brim_offs, num_y * cell_size + wall_t, 0]) {        
+            cube(size=[num_x * cell_size + brim_offs + brim_add, brim_w , brim_h]);
+        };
+    }    
+    
+    /* Right */
+    if(borders[1]){
+        // offset corner bottom        
+        brim_offs = borders[2] ? wall_t : - cut_clr / 2;
+        // add corner top        
+        brim_add = borders[0] ? brim_w : - cut_clr / 2 ;
+        
+        
+        translate([num_x * cell_size + wall_t, wall_t - brim_offs, 0]) {
+            cube(size=[brim_w , num_y * cell_size + brim_offs + brim_add, brim_h]);
+        };
+    }
+    
+    /* Bottom */
+    if(borders[2]){
+        // offset corner left
+        brim_offs = borders[3] ? 0 : - cut_clr / 2 ;
+        // add corner right
+        brim_add = borders[1] ? wall_t + brim_w : - cut_clr /2;
+        translate([- brim_offs, - brim_w, 0]) {
+            cube(size=[num_x * cell_size + brim_add + brim_offs, brim_w, brim_h]);
+        };
+    }
+    
+    /* Left */
+    if(borders[3]){
+        // offset corner bottom
+        brim_offs = borders[2] ? brim_w : 0;
+        // add corner top
+        brim_add = borders[0] ? wall_t : - cut_clr / 2;
+        translate([- brim_w, -brim_offs, 0]) {
+            cube(size=[brim_w , num_y * cell_size + brim_add + brim_offs, brim_h]);
+        };
+    }
+}
+
 /*
  * Finally, behold the glory of the complete LED grid! I love it when a
  * plan comes together.
@@ -406,6 +459,7 @@ module ledgrid(borders = [1, 1, 1, 1])
     }
     if(tab_h != 0 && tab_w != 0){
         tabs(borders);
-    }
+    }	
+	brims(borders);
 }
 
