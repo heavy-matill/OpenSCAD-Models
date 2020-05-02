@@ -52,6 +52,15 @@ b_left = 1; // [0, 1]
 brim_w = 10;
 brim_h = 2;
 
+// Drill screw nut holes parameters
+b_drill = 1;
+m_drill = 3.5;
+h_drill = 15;//5;
+s_nut = 5.3; //M3: 5.3;
+e_nut = 6.8; //M3: 6.3;
+h_nut = 3;//3; //M3: 2.3;
+num_drill = 4;
+
 /* [Hidden] */
 /* Wall thickness in millimeters. */
 wall_t = 1;
@@ -397,6 +406,44 @@ module tabs(borders = [0, 0, 0, 0])
     }
 }
 
+module drill() {
+    union() {
+        translate([0, 0, - h_drill])
+            cylinder($fn=36, d=m_drill, h=h_drill);
+        translate([0, 0, - h_nut])
+            rotate(30)
+                cylinder($fn=6, d=e_nut, h=h_nut);
+    };
+}
+
+module drills(borders = [0,0,0,0]) {
+    
+    /* Top */
+    for(j=[0:3]) {        
+        if(borders[j]){
+            rotate(j * 90) {
+                if(j%2) {
+                    translate([- (num_y - 0.5) * cell_size /2, num_x * cell_size / 2 + brim_w / 2, brim_h]) {
+                        for(i=[0:num_drill - 1]) {
+                            translate([(num_y - 0.5) * cell_size / (num_drill - 1) * i,0,0])
+                                drill();
+                        }
+                    };
+                    
+                } else {
+                    translate([- (num_x - 0.5) * cell_size /2, num_y * cell_size / 2 + brim_w / 2, brim_h]) {
+                        for(i=[0:num_drill - 1]) {
+                            translate([(num_x - 0.5) * cell_size / (num_drill - 1) * i,0,0])
+                                drill();
+                        }
+                    };
+                }
+            };
+        }
+    }
+    
+}
+
 module brims(borders = [0,0,0,0]) {  
     
     /* Top */
@@ -460,6 +507,12 @@ module ledgrid(borders = [1, 1, 1, 1])
     if(tab_h != 0 && tab_w != 0){
         tabs(borders);
     }	
-	brims(borders);
+	
+    difference() {
+        brims(borders);
+        translate([num_x * cell_size / 2 + wall_t / 2, num_y * cell_size / 2 + wall_t / 2, 0])
+        // center of grid
+            drills(borders);
+    };
 }
 
